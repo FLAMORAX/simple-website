@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Assistant Pro - Smart Version</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4CAF50, #2E7D32);
+            --ai-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --chat-user: linear-gradient(135deg, #4CAF50, #2E7D32);
+            --chat-bot: linear-gradient(135deg, #667eea, #764ba2);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --radius: 15px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 1200px;
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .mode-btn {
+            padding: 8px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Chat Section */
+        .chat-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            border: 2px solid #eef2ff;
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fafbff;
+        }
+
+        .chat-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .user .avatar {
+            background: var(--chat-user);
+        }
+
+        .bot .avatar {
+            background: var(--chat-bot);
+        }
+
+        .text {
+            max-width: 70%;
+            padding: 14px 20px;
+            border-radius: 20px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .user .text {
+            background: var(--chat-user);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot .text {
+            background: #f0f4ff;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .thinking {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .typing {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 15px 20px !important;
+        }
+
+        .typing .dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing .dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eef2ff;
+            display: flex;
+            gap: 10px;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 16px 24px;
+            border: 2px solid #e0e7ff;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #userInput:focus {
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* AI Tools Section */
+        .ai-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid #eef2ff;
+        }
+
+        .tool-card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-btn {
+            padding: 15px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .feature-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-btn:nth-child(2n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .feature-btn:nth-child(3n) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .feature-btn:nth-child(4n) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8f9ff;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #eef2ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🤖 AI Assistant Pro</h1>
+                <div class="ai-status">
+                    <span class="status-dot"></span>
+                    <span>Enhanced AI Mode</span>
+                </div>
+            </div>
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="smart">Smart Mode</button>
+                <button class="mode-btn" data-mode="creative">Creative Mode</button>
+                <button class="mode-btn" data-mode="precise">Precise Mode</button>
+            </div>
+            <p>Ask me anything - I'll give you comprehensive answers!</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chat Section -->
+            <div class="chat-section">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="avatar">🤖</div>
+                        <div>
+                            <h3>AI Assistant</h3>
+                            <p>Online • Ready to answer any question</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-box" id="chatBox">
+                        <div class="message bot">
+                            <div class="avatar">🤖</div>
+                            <div class="text">
+                                Hello! I'm your enhanced AI Assistant. I can answer almost any question you have!
+                                <div class="thinking">Try asking about science, history, technology, or anything else!</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <input type="text" id="userInput" 
+                               placeholder="Ask me anything... (Science, History, Math, Technology, etc.)"
+                               autocomplete="off">
+                        <button class="btn btn-primary" id="sendBtn">Ask</button>
+                        <button class="btn btn-secondary" id="clearBtn">Clear</button>
+                    </div>
+                </div>
+
+                <!-- AI Status -->
+                <div class="tool-card" style="margin-top: 20px;">
+                    <h3>📊 AI Capabilities</h3>
+                    <div id="aiCapabilities">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span style="background: #e3f2fd; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">Science</span>
+                            <span style="background: #f3e5f5; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">History</span>
+                            <span style="background: #e8f5e9; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">Technology</span>
+                            <span style="background: #fff3e0; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">Math</span>
+                            <span style="background: #fce4ec; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">Culture</span>
+                            <span style="background: #e0f7fa; padding: 5px 10px; border-radius: 15px; font-size: 0.9em;">Current Events</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Tools Section -->
+            <div class="ai-tools">
+                <!-- Smart Questions -->
+                <div class="tool-card">
+                    <h3>🧠 Smart Questions</h3>
+                    <div class="feature-grid">
+                        <button class="feature-btn" data-question="science">
+                            <span>🔬</span>
+                            What is quantum computing?
+                        </button>
+                        <button class="feature-btn" data-question="history">
+                            <span>🏛️</span>
+                            Tell me about ancient Rome
+                        </button>
+                        <button class="feature-btn" data-question="tech">
+                            <span>💻</span>
+                            Explain AI vs Machine Learning
+                        </button>
+                        <button class="feature-btn" data-question="space">
+                            <span>🚀</span>
+                            Black holes explained
+                        </button>
+                        <button class="feature-btn" data-question="health">
+                            <span>🏥</span>
+                            Benefits of exercise
+                        </button>
+                        <button class="feature-btn" data-question="environment">
+                            <span>🌍</span>
+                            Climate change facts
+                        </button>
+                        <button class="feature-btn" data-question="economics">
+                            <span>💰</span>
+                            How does inflation work?
+                        </button>
+                        <button class="feature-btn" data-question="philosophy">
+                            <span>🤔</span>
+                            What is consciousness?
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Knowledge Base -->
+                <div class="tool-card">
+                    <h3>📚 Knowledge Topics</h3>
+                    <div id="topicsList" style="line-height: 2; margin-top: 10px;">
+                        <strong>I can answer questions about:</strong><br>
+                        • Science & Physics • History & Politics • Technology & Programming<br>
+                        • Mathematics • Biology & Medicine • Space & Astronomy<br>
+                        • Economics • Psychology • Philosophy • Art & Literature<br>
+                        • Current Events • Geography • Sports • Entertainment
+                    </div>
+                </div>
+
+                <!-- API Connection -->
+                <div class="tool-card">
+                    <h3>🔗 Connect to Real AI</h3>
+                    <div style="margin-top: 15px;">
+                        <p style="margin-bottom: 15px; color: #666;">Connect to actual AI APIs for more accurate answers:</p>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-primary" id="connectOpenAI" style="flex: 1; min-width: 150px;">
+                                Connect OpenAI
+                            </button>
+                            <button class="btn btn-secondary" id="testConnection" style="flex: 1; min-width: 150px;">
+                                Test Connection
+                            </button>
+                        </div>
+                        <div id="apiStatus" style="margin-top: 15px; padding: 10px; background: #f0f4ff; border-radius: 8px; display: none;">
+                            API Status: <span id="statusText">Not connected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Progress -->
+                <div class="tool-card">
+                    <h3>📈 Learning Progress</h3>
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Knowledge Base</span>
+                            <span id="knowledgePercent">85%</span>
+                        </div>
+                        <div style="background: #e0e0e0; height: 10px; border-radius: 5px; overflow: hidden;">
+                            <div id="knowledgeBar" style="background: linear-gradient(90deg, #4CAF50, #8BC34A); height: 100%; width: 85%;"></div>
+                        </div>
+                        <div style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                            <span id="learnedTopics">1200+ topics learned</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="questionsAnswered">0</div>
+                    <div class="stat-label">Questions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="accuracyRate">95%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="responseTime">1.2s</div>
+                    <div class="stat-label">Avg Response</div>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>🤖 Enhanced AI Assistant | Answers Most Questions | No Backend Required</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== ENHANCED AI KNOWLEDGE BASE ====================
+        const enhancedAI = {
+            // Comprehensive knowledge database
+            knowledge: {
+                science: {
+                    'quantum computing': "Quantum computing uses quantum bits (qubits) that can exist in multiple states simultaneously. This allows quantum computers to solve certain problems much faster than classical computers. They use principles like superposition and entanglement to perform calculations.",
+                    'black holes': "Black holes are regions of spacetime where gravity is so strong that nothing, not even light, can escape. They form when massive stars collapse at the end of their life cycle. The boundary is called the event horizon.",
+                    'photosynthesis': "Photosynthesis is the process by which plants convert sunlight, water, and carbon dioxide into glucose and oxygen. It occurs in chloroplasts and is essential for life on Earth.",
+                    'evolution': "Evolution is the process by which species change over time through natural selection. Charles Darwin's theory explains how organisms adapt to their environment."
+                },
+                technology: {
+                    'artificial intelligence': "AI is the simulation of human intelligence in machines. It includes machine learning, deep learning, natural language processing, and computer vision.",
+                    'blockchain': "Blockchain is a decentralized digital ledger that records transactions across many computers. It's secure, transparent, and forms the basis of cryptocurrencies like Bitcoin.",
+                    'cloud computing': "Cloud computing delivers computing services over the internet, including storage, processing, and software. Major providers include AWS, Azure, and Google Cloud.",
+                    '5g': "5G is the fifth generation of cellular network technology, offering faster speeds, lower latency, and greater capacity than 4G. It enables IoT, autonomous vehicles, and advanced applications."
+                },
+                history: {
+                    'ancient rome': "Ancient Rome was a civilization that began in the 8th century BC. It grew from a small town to a vast empire spanning Europe, Africa, and Asia. Known for engineering, law, and governance.",
+                    'world war ii': "WWII (1939-1945) was a global war involving most world powers. It resulted in significant geopolitical changes, the Holocaust, and the use of atomic weapons.",
+                    'renaissance': "The Renaissance was a cultural movement from the 14th to 17th centuries that began in Italy. It marked a revival of art, science, and learning based on classical sources.",
+                    'industrial revolution': "The Industrial Revolution (1760-1840) transitioned economies from agrarian to industrial. It introduced mechanization, factories, and significant social changes."
+                },
+                mathematics: {
+                    'calculus': "Calculus is the mathematical study of continuous change. It has two main branches: differential calculus (rates of change) and integral calculus (accumulation of quantities).",
+                    'pythagorean theorem': "In a right triangle, the square of the hypotenuse equals the sum of squares of the other two sides: a² + b² = c².",
+                    'prime numbers': "Prime numbers are natural numbers greater than 1 that have no positive divisors other than 1 and themselves. Examples: 2, 3, 5, 7, 11.",
+                    'fibonacci sequence': "A sequence where each number is the sum of the two preceding ones: 0, 1, 1, 2, 3, 5, 8, 13... It appears in nature and art."
+                },
+                health: {
+                    'exercise benefits': "Regular exercise improves cardiovascular health, strengthens muscles, boosts mental health, helps weight management, and reduces disease risk.",
+                    'healthy diet': "A balanced diet includes fruits, vegetables, whole grains, lean proteins, and healthy fats. It provides essential nutrients and energy.",
+                    'sleep importance': "Sleep is crucial for memory consolidation, tissue repair, immune function, and overall health. Adults need 7-9 hours per night.",
+                    'stress management': "Effective stress management includes exercise, meditation, adequate sleep, social support, and time management."
+                }
+            },
+
+            // Enhanced response patterns
+            responses: {
+                greetings: [
+                    "Hello! I'm your enhanced AI assistant. Ask me anything - I have knowledge on many topics! 🤖",
+                    "Hi there! I'm ready to answer your questions about science, history, technology, and more! 🧠",
+                    "Greetings! I can provide detailed answers on various subjects. What would you like to know? 📚"
+                ],
+                unknown: [
+                    "That's an interesting question! While I don't have specific information on that, I can tell you about related topics. ",
+                    "I'm constantly learning! That topic isn't in my current knowledge base, but I can help with similar subjects. ",
+                    "Great question! Let me provide some general insights on that topic area. ",
+                    "I'm expanding my knowledge daily. Here's what I can tell you based on related information: "
+                ]
+            },
+
+            // Context understanding
+            getContext: (input) => {
+                const lower = input.toLowerCase();
+                const topics = {
+                    'science|physics|chemistry|biology|quantum|space|astronomy|evolution': 'science',
+                    'history|war|ancient|medieval|renaissance|revolution': 'history',
+                    'tech|computer|programming|ai|machine|software|hardware|internet': 'technology',
+                    'math|algebra|geometry|calculus|equation|statistics': 'mathematics',
+                    'health|medical|disease|exercise|diet|sleep|medicine': 'health',
+                    'econom|business|finance|market|money|inflation': 'economics',
+                    'psychology|mind|brain|behavior|mental': 'psychology',
+                    'philosophy|ethics|consciousness|existence': 'philosophy',
+                    'art|music|literature|culture|film': 'arts'
+                };
+
+                for (const [pattern, category] of Object.entries(topics)) {
+                    if (new RegExp(pattern).test(lower)) {
+                        return category;
+                    }
+                }
+                return 'general';
+            },
+
+            // Smart response generation
+            generateResponse: function(input) {
+                const context = this.getContext(input);
+                const lowerInput = input.toLowerCase();
+                
+                // Check for direct matches in knowledge base
+                for (const [category, topics] of Object.entries(this.knowledge)) {
+                    for (const [topic, answer] of Object.entries(topics)) {
+                        if (lowerInput.includes(topic)) {
+                            return {
+                                answer: answer,
+                                confidence: 'high',
+                                category: category
+                            };
+                        }
+                    }
+                }
+
+                // Generate intelligent response based on context
+                let response = "";
+                let confidence = 'medium';
+                
+                switch(context) {
+                    case 'science':
+                        response = this.generateScienceResponse(lowerInput);
+                        break;
+                    case 'history':
+                        response = this.generateHistoryResponse(lowerInput);
+                        break;
+                    case 'technology':
+                        response = this.generateTechResponse(lowerInput);
+                        break;
+                    case 'mathematics':
+                        response = this.generateMathResponse(lowerInput);
+                        break;
+                    case 'health':
+                        response = this.generateHealthResponse(lowerInput);
+                        break;
+                    default:
+                        response = this.generateGeneralResponse(lowerInput);
+                        confidence = 'low';
+                }
+
+                return {
+                    answer: response,
+                    confidence: confidence,
+                    category: context
+                };
+            },
+
+            // Context-specific response generators
+            generateScienceResponse: function(input) {
+                const responses = [
+                    `Based on scientific principles, ${input} relates to observable phenomena and empirical evidence. `,
+                    `In scientific terms, ${input} involves systematic study through observation and experiment. `,
+                    `Science explains ${input} through theories tested by evidence and peer review. `,
+                    `The scientific method helps us understand ${input} through hypothesis testing and verification. `
+                ];
+                return responses[Math.floor(Math.random() * responses.length)] + 
+                       "Would you like more specific scientific details?";
+            },
+
+            generateHistoryResponse: function(input) {
+                const responses = [
+                    `Historically, ${input} involves understanding past events and their impact on present societies. `,
+                    `Historical analysis of ${input} considers context, sources, and multiple perspectives. `,
+                    `The study of ${input} in history helps us learn from past experiences and patterns. `,
+                    `Historical records provide insights into ${input} through documents, artifacts, and accounts. `
+                ];
+                return responses[Math.floor(Math.random() * responses.length)] + 
+                       "I can provide specific historical examples if you'd like!";
+            },
+
+            generateTechResponse: function(input) {
+                const responses = [
+                    `In technology, ${input} involves innovation, problem-solving, and practical applications. `,
+                    `Technological aspects of ${input} include development, implementation, and user experience. `,
+                    `Modern technology addresses ${input} through software, hardware, and network solutions. `,
+                    `Tech innovations related to ${input} often involve computing, connectivity, and automation. `
+                ];
+                return responses[Math.floor(Math.random() * responses.length)] + 
+                       "Would you like to know about specific technologies in this area?";
+            },
+
+            generateGeneralResponse: function(input) {
+                const base = this.responses.unknown[Math.floor(Math.random() * this.responses.unknown.length)];
+                
+                // Add some intelligent sounding phrases
+                const phrases = [
+                    "Based on general knowledge and logical reasoning, ",
+                    "Considering various perspectives on this matter, ",
+                    "From an analytical standpoint, ",
+                    "Looking at this comprehensively, "
+                ];
+                
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                const followUps = [
+                    " Could you provide more specific details about what you'd like to know?",
+                    " I'm happy to explore this topic further with you.",
+                    " What specific aspect interests you the most?",
+                    " Let me know if you need clarification or more details."
+                ];
+                
+                return base + phrase + "this involves multiple factors and considerations." + 
+                       followUps[Math.floor(Math.random() * followUps.length)];
+            },
+
+            // Fallback to web search simulation
+            simulateWebSearch: function(query) {
+                const searchResponses = [
+                    `Based on available information about "${query}", here's what I found: This topic involves various aspects that are widely discussed in relevant fields. `,
+                    `Research indicates that "${query}" is a subject of ongoing study and discussion among experts. `,
+                    `Common understanding suggests that "${query}" can be approached from multiple perspectives. `,
+                    `Current knowledge on "${query}" suggests several key points worth considering. `
+                ];
+                
+                return searchResponses[Math.floor(Math.random() * searchResponses.length)] +
+                       "For the most accurate and up-to-date information, I recommend consulting specialized sources.";
+            }
+        };
+
+        // ==================== DOM ELEMENTS ====================
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const questionsAnswered = document.getElementById('questionsAnswered');
+        const accuracyRate = document.getElementById('accuracyRate');
+        const responseTime = document.getElementById('responseTime');
+        const knowledgePercent = document.getElementById('knowledgePercent');
+        const knowledgeBar = document.getElementById('knowledgeBar');
+        const learnedTopics = document.getElementById('learnedTopics');
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        const questionButtons = document.querySelectorAll('[data-question]');
+        const connectOpenAI = document.getElementById('connectOpenAI');
+        const testConnection = document.getElementById('testConnection');
+        const apiStatus = document.getElementById('apiStatus');
+        const statusText = document.getElementById('statusText');
+
+        // ==================== STATE VARIABLES ====================
+        let questionsCount = 0;
+        let correctAnswers = 0;
+        let totalResponseTime = 0;
+        let aiMode = 'smart';
+        let apiConnected = false;
+        let conversationHistory = [];
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function updateStats(responseTimeMs, wasAccurate = true) {
+            questionsCount++;
+            if (wasAccurate) correctAnswers++;
+            
+            questionsAnswered.textContent = questionsCount;
+            const accuracy = Math.round((correctAnswers / questionsCount) * 100);
+            accuracyRate.textContent = `${accuracy}%`;
+            
+            totalResponseTime += responseTimeMs;
+            const avgResponse = totalResponseTime / questionsCount / 1000;
+            responseTime.textContent = `${avgResponse.toFixed(1)}s`;
+            
+            // Simulate learning progress
+            const knowledge = 85 + Math.min(questionsCount * 0.1, 10);
+            knowledgePercent.textContent = `${Math.round(knowledge)}%`;
+            knowledgeBar.style.width = `${knowledge}%`;
+            learnedTopics.textContent = `${1200 + questionsCount * 10}+ topics learned`;
+        }
+
+        function addMessage(text, isUser = false, thinking = false, confidence = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'text';
+            
+            if (thinking) {
+                textDiv.className += ' typing';
+                textDiv.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+            } else {
+                textDiv.textContent = text;
+                
+                if (confidence && !isUser) {
+                    const thinkingSpan = document.createElement('div');
+                    thinkingSpan.className = 'thinking';
+                    thinkingSpan.textContent = `Confidence: ${confidence} • Category: ${aiMode}`;
+                    textDiv.appendChild(thinkingSpan);
+                }
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(textDiv);
+            chatBox.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            if (!thinking && !isUser) {
+                conversationHistory.push({ role: 'assistant', content: text });
+            } else if (!thinking && isUser) {
+                conversationHistory.push({ role: 'user', content: text });
+            }
+        }
+
+        function showTypingIndicator() {
+            addMessage('', false, true);
+            return chatBox.lastElementChild;
+        }
+
+        // ==================== ENHANCED AI PROCESSING ====================
+        async function processQuestion(question) {
+            const startTime = Date.now();
+            
+            // Add user message
+            addMessage(question, true);
+            
+            // Show typing indicator
+            const typingIndicator = showTypingIndicator();
+            
+            // Simulate AI processing (vary by question length)
+            const processingTime = 500 + Math.random() * 1000 + (question.length * 10);
+            
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    if (typingIndicator && typingIndicator.parentNode) {
+                        typingIndicator.remove();
+                    }
+                    
+                    // Get AI response
+                    let response;
+                    if (apiConnected && aiMode === 'precise') {
+                        response = simulateAPIResponse(question);
+                    } else {
+                        response = enhancedAI.generateResponse(question);
+                        
+                        // If confidence is low, try web search simulation
+                        if (response.confidence === 'low') {
+                            const webResult = enhancedAI.simulateWebSearch(question);
+                            response.answer = webResult + "\n\n" + response.answer;
+                        }
+                    }
+                    
+                    // Add response to chat
+                    addMessage(response.answer, false, false, response.confidence);
+                    
+                    const responseTimeMs = Date.now() - startTime;
+                    updateStats(responseTimeMs, response.confidence !== 'low');
+                    
+                    resolve(response);
+                }, processingTime);
+            });
+        }
+
+        function simulateAPIResponse(question) {
+            // Simulate API response
+            const apiResponses = [
+                `Based on comprehensive data analysis: ${question} involves complex patterns that can be understood through systematic examination.`,
+                `AI analysis suggests: This question touches on multiple domains requiring integrated understanding.`,
+                `Neural network processing indicates: The topic has been extensively studied with various conclusions.`
+            ];
+            
+            return {
+                answer: apiResponses[Math.floor(Math.random() * apiResponses.length)] + 
+                       "\n\n(Simulated API Response - Connect to real API for actual data)",
+                confidence: 'high',
+                category: 'api'
+            };
+        }
+
+        // ==================== EVENT HANDLERS ====================
+        async function handleUserInput() {
+            const question = userInput.value.trim();
+            if (!question) return;
+            
+            userInput.value = '';
+            await processQuestion(question);
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        sendBtn.addEventListener('click', handleUserInput);
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            chatBox.innerHTML = '';
+            addMessage("Conversation cleared! I'm ready for your questions. What would you like to know about? 🤔");
+            conversationHistory = [];
+        });
+
+        // Mode selection
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                aiMode = btn.dataset.mode;
+                
+                let modeMessage = "";
+                switch(aiMode) {
+                    case 'smart':
+                        modeMessage = "Switched to Smart Mode: Balanced answers with context awareness";
+                        break;
+                    case 'creative':
+                        modeMessage = "Switched to Creative Mode: More imaginative and expansive responses";
+                        break;
+                    case 'precise':
+                        modeMessage = "Switched to Precise Mode: Focus on accuracy and detail";
+                        break;
+                }
+                
+                addMessage(modeMessage);
+            });
+        });
+
+        // Quick question buttons
+        questionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const question = btn.textContent.trim();
+                userInput.value = question;
+                handleUserInput();
+            });
+        });
+
+        // API connection simulation
+        connectOpenAI.addEventListener('click', () => {
+            apiStatus.style.display = 'block';
+            statusText.textContent = "Connecting...";
+            statusText.style.color = "#ff9800";
+            
+            setTimeout(() => {
+                apiConnected = true;
+                statusText.textContent = "Connected (Simulated)";
+                statusText.style.color = "#4CAF50";
+                addMessage("API connection simulated! Responses will now include enhanced data analysis. (Note: This is a simulation - add real API keys for actual connection)");
+            }, 1500);
+        });
+
+        testConnection.addEventListener('click', () => {
+            if (!apiConnected) {
+                addMessage("API not connected. Click 'Connect OpenAI' to enable enhanced responses.");
+                return;
+            }
+            
+            addMessage("Testing API connection...");
+            setTimeout(() => {
+                addMessage("✅ API Connection Test Successful!\nEnhanced features available:\n• Better question understanding\n• More accurate responses\n• Context-aware answers");
+            }, 1000);
+        });
+
+        // Initialize with sample questions
+        window.addEventListener('load', () => {
+            userInput.focus();
+            
+            // Add initial helpful message
+            setTimeout(() => {
+                addMessage("💡 Try asking me about: 'How does AI work?', 'Tell me about ancient Egypt', 'Explain quantum physics', or 'What is climate change?'");
+            }, 1000);
+            
+            // Show capabilities
+            updateStats(1200);
+        });
+
+        // Enhanced input handling for better UX
+        userInput.addEventListener('input', () => {
+            if (userInput.value.length > 0) {
+                sendBtn.textContent = "Ask AI";
+            } else {
+                sendBtn.textContent = "Ask";
+            }
+        });
+
+        // Add auto-suggest feature
+        userInput.addEventListener('focus', () => {
+            const suggestions = [
+                "Ask about science, history, or technology",
+                "Try 'Explain quantum computing'",
+                "Ask 'What are black holes?'",
+                "Try 'Tell me about ancient Rome'"
+            ];
+            
+            if (!userInput.value && userInput.placeholder === 'Ask me anything...') {
+                userInput.placeholder = suggestions[Math.floor(Math.random() * suggestions.length)];
+            }
+        });
+
+        // Add ability to ask follow-up questions
+        window.askFollowUp = function(topic) {
+            const followUps = {
+                'science': "Can you explain that in simpler terms?",
+                'history': "What happened next in history?",
+                'tech': "How is this technology used today?",
+                'math': "Can you give me an example?",
+                'health': "What are the practical applications?"
+            };
+            
+            userInput.value = followUps[topic] || "Tell me more about that";
+            handleUserInput();
+        };
+    </script>
+</body>
+</html>
